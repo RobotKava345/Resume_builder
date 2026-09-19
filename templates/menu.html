@@ -1,3 +1,71 @@
-<header>
-    
-</header>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: #1a1d20; border-bottom: 3px solid #0d6efd;">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'main:template_list' %}">
+            <i class="bi bi-file-earmark-person fs-5"></i> Резюме-білдер
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'main:template_list' %}">
+                        <i class="bi bi-grid"></i> Шаблони
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'main:announcement_list' %}">
+                        <i class="bi bi-megaphone"></i> Новини
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'main:resume_list' %}">
+                        <i class="bi bi-folder2-open"></i> Мої резюме
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav align-items-lg-center">
+                {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:index' %}">
+                        <i class="bi bi-shield-lock"></i> Адмінка
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'main:resume_create' %}">
+                        <span class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-lg"></i> Нове резюме
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item d-flex align-items-center gap-2">
+                    <span class="nav-link text-white-50 mb-0">
+                        <i class="bi bi-person-circle"></i> {{ user.username }}
+                    </span>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-box-arrow-right"></i> Вийти
+                        </button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">
+                        <i class="bi bi-box-arrow-in-right"></i> Увійти
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary btn-sm" href="{% url 'register' %}">
+                        <i class="bi bi-person-plus"></i> Реєстрація
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

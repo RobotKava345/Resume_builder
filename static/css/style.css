@@ -1,0 +1,10 @@
+/* Footer links: плавный hover-переход */
+.footer-links a {
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    transition: color 0.15s ease-in-out, padding-left 0.15s ease-in-out;
+}
+.footer-links a:hover {
+    color: #fff;
+    padding-left: 4px;
+}

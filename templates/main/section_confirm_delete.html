@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Видалення секції{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Видалити секцію?</h1>
+<p>Ви впевнені, що хочете видалити цей запис? Цю дію неможливо скасувати.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Так, видалити</button>
+    <a href="{% url 'main:resume_detail' resume_pk %}" class="btn btn-link">Скасувати</a>
+</form>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Редагування резюме{% else %}Нове резюме{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="mb-4">{% if object %}Редагування резюме{% else %}Нове резюме{% endif %}</h1>
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <h6 class="text-uppercase text-muted small mb-3">Основна інформація</h6>
+                    <div class="row">
+                        <div class="col-md-8">{% include 'main/_field.html' with field=form.title %}</div>
+                        <div class="col-md-4">{% include 'main/_field.html' with field=form.template %}</div>
+                    </div>
+
+                    <h6 class="text-uppercase text-muted small mb-3 mt-4">Контактні дані</h6>
+                    {% include 'main/_field.html' with field=form.full_name %}
+                    <div class="row">
+                        <div class="col-md-6">{% include 'main/_field.html' with field=form.email %}</div>
+                        <div class="col-md-6">{% include 'main/_field.html' with field=form.phone %}</div>
+                    </div>
+                    {% include 'main/_field.html' with field=form.address %}
+
+                    <h6 class="text-uppercase text-muted small mb-3 mt-4">Про себе</h6>
+                    {% include 'main/_field.html' with field=form.summary %}
+
+                    <h6 class="text-uppercase text-muted small mb-3 mt-4">Фото</h6>
+                    {% include 'main/_field.html' with field=form.photo %}
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary px-4">Зберегти</button>
+                        {% if object %}
+                        <a href="{% url 'main:resume_detail' object.pk %}" class="btn btn-outline-secondary px-4">Скасувати</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

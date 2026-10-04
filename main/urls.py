@@ -5,6 +5,9 @@ from . import views
 app_name = 'main'
 
 urlpatterns = [
+    # Головна
+    path('', views.ResumeTemplateListView.as_view(), name='home'),
+
     # Каталог шаблонів
     path('templates/', views.ResumeTemplateListView.as_view(), name='template_list'),
     path('templates/<int:pk>/', views.ResumeTemplateDetailView.as_view(), name='template_detail'),

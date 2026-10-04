@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ resume.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+    <div>
+        <h1 class="mb-1">{{ resume.title }}</h1>
+        <span class="badge status-badge {% if resume.status == 'ready' %}text-bg-success{% else %}text-bg-secondary{% endif %}">
+            {{ resume.get_status_display }}
+        </span>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="{% url 'main:resume_update' resume.pk %}" class="btn btn-outline-secondary">Редагувати</a>
+        <form action="{% url 'main:resume_clone' resume.pk %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-secondary">Клонувати</button>
+        </form>
+        <a href="{% url 'main:resume_export_pdf' resume.pk %}" class="btn btn-outline-primary">Експорт PDF</a>
+        <a href="{% url 'main:resume_export_docx' resume.pk %}" class="btn btn-outline-primary">Експорт DOCX</a>
+        <a href="{% url 'main:resume_delete' resume.pk %}" class="btn btn-outline-danger">Видалити</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4 text-center">
+        {% if resume.photo %}
+        <img src="{{ resume.photo.url }}" class="resume-photo rounded-circle" alt="{{ resume.full_name }}">
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <h4>{{ resume.full_name|default:"—" }}</h4>
+        <p class="mb-1"><i class="bi bi-envelope"></i> {{ resume.email|default:"—" }}</p>
+        <p class="mb-1"><i class="bi bi-telephone"></i> {{ resume.phone|default:"—" }}</p>
+        <p class="mb-1"><i class="bi bi-geo-alt"></i> {{ resume.address|default:"—" }}</p>
+        {% if resume.template %}
+        <p class="mb-1"><i class="bi bi-file-earmark-text"></i> Шаблон: {{ resume.template.name }}</p>
+        {% endif %}
+        {% if resume.summary %}
+        <p class="mt-3">{{ resume.summary }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<hr class="my-4">
+
+<!-- Досвід роботи -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Досвід роботи</h3>
+    <a href="{% url 'main:experience_add' resume.pk %}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-plus-lg"></i> Додати
+    </a>
+</div>
+{% for exp in resume.work_experiences.all %}
+<div class="card mb-2">
+    <div class="card-body d-flex justify-content-between align-items-start">
+        <div>
+            <h6 class="mb-1">{{ exp.position }} — {{ exp.company }}</h6>
+            <p class="text-muted small mb-1">
+                {{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y"|default:"—" }}{% endif %}
+            </p>
+            <p class="mb-0">{{ exp.description }}</p>
+        </div>
+        <div class="d-flex gap-2 flex-shrink-0">
+            <a href="{% url 'main:experience_edit' resume.pk exp.pk %}" class="btn btn-sm btn-outline-secondary">Редагувати</a>
+            <a href="{% url 'main:experience_delete' resume.pk exp.pk %}" class="btn btn-sm btn-outline-danger">Видалити</a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">Секцій ще немає.</p>
+{% endfor %}
+
+<!-- Освіта -->
+<div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <h3 class="mb-0">Освіта</h3>
+    <a href="{% url 'main:education_add' resume.pk %}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-plus-lg"></i> Додати
+    </a>
+</div>
+{% for edu in resume.educations.all %}
+<div class="card mb-2">
+    <div class="card-body d-flex justify-content-between align-items-start">
+        <div>
+            <h6 class="mb-1">{{ edu.institution }}{% if edu.degree %} — {{ edu.degree }}{% endif %}</h6>
+            <p class="text-muted small mb-1">
+                {{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y"|default:"—" }}
+            </p>
+            <p class="mb-0">{{ edu.description }}</p>
+        </div>
+        <div class="d-flex gap-2 flex-shrink-0">
+            <a href="{% url 'main:education_edit' resume.pk edu.pk %}" class="btn btn-sm btn-outline-secondary">Редагувати</a>
+            <a href="{% url 'main:education_delete' resume.pk edu.pk %}" class="btn btn-sm btn-outline-danger">Видалити</a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">Секцій ще немає.</p>
+{% endfor %}
+
+<!-- Навички -->
+<div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <h3 class="mb-0">Навички</h3>
+    <a href="{% url 'main:skill_add' resume.pk %}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-plus-lg"></i> Додати
+    </a>
+</div>
+{% if resume.skills.all %}
+<div class="d-flex flex-wrap gap-2">
+    {% for skill in resume.skills.all %}
+    <span class="badge text-bg-light border d-flex align-items-center gap-2 p-2">
+        {{ skill.name }} ({{ skill.get_level_display }})
+        <a href="{% url 'main:skill_edit' resume.pk skill.pk %}" class="text-decoration-none">
+            <i class="bi bi-pencil"></i>
+        </a>
+        <a href="{% url 'main:skill_delete' resume.pk skill.pk %}" class="text-decoration-none text-danger">
+            <i class="bi bi-x-lg"></i>
+        </a>
+    </span>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">Секцій ще немає.</p>
+{% endif %}
+{% endblock %}

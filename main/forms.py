@@ -3,7 +3,24 @@ from django import forms
 from .models import Education, Resume, Skill, WorkExperience
 
 
-class ResumeForm(forms.ModelForm):
+class BootstrapFormMixin:
+    """Додає Bootstrap-класи всім полям форми залежно від типу віджета."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            widget = field.widget
+            if isinstance(widget, forms.CheckboxInput):
+                widget.attrs.setdefault('class', 'form-check-input')
+            elif isinstance(widget, (forms.Select, forms.SelectMultiple)):
+                widget.attrs.setdefault('class', 'form-select')
+            elif isinstance(widget, forms.ClearableFileInput):
+                widget.attrs.setdefault('class', 'form-control')
+            else:
+                widget.attrs.setdefault('class', 'form-control')
+
+
+class ResumeForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Resume
         fields = [
@@ -15,7 +32,7 @@ class ResumeForm(forms.ModelForm):
         }
 
 
-class WorkExperienceForm(forms.ModelForm):
+class WorkExperienceForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = WorkExperience
         fields = [
@@ -29,7 +46,7 @@ class WorkExperienceForm(forms.ModelForm):
         }
 
 
-class EducationForm(forms.ModelForm):
+class EducationForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Education
         fields = [
@@ -43,7 +60,7 @@ class EducationForm(forms.ModelForm):
         }
 
 
-class SkillForm(forms.ModelForm):
+class SkillForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Skill
         fields = ['name', 'level', 'order']

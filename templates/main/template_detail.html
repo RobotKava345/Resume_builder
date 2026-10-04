@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ template_obj.name }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'main:template_list' %}" class="btn btn-link px-0 mb-3">&larr; Назад до каталогу</a>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        {% if template_obj.preview_image %}
+        <img src="{{ template_obj.preview_image.url }}" class="img-fluid rounded border" alt="{{ template_obj.name }}">
+        {% else %}
+        <div class="card-img-placeholder rounded border" style="height: 400px;">
+            <span>Без превʼю</span>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1>{{ template_obj.name }}</h1>
+        <p class="text-muted">{{ template_obj.description }}</p>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'main:resume_create' %}?template={{ template_obj.pk }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Застосувати до нового резюме
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}?next={% url 'main:template_detail' template_obj.pk %}" class="btn btn-primary">
+            Увійдіть, щоб застосувати шаблон
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

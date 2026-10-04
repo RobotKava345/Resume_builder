@@ -18,6 +18,9 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(View):
     def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
         logout(request)
         return redirect('login')
 

@@ -1,10 +1,136 @@
-/* Footer links: плавный hover-переход */
+
+
+
+/* ==========================================================================
+   1. Дизайн-токени
+   ========================================================================== */
+
+:root {
+    --brand-dark: #1a1d20;
+    --brand-accent: #0d6efd;
+    --brand-accent-soft: rgba(13, 110, 253, 0.08);
+    --card-radius: 0.75rem;
+    --transition-fast: 0.15s ease-in-out;
+}
+
+
+/* ==========================================================================
+   2. Header / Footer — темна тема + акцентна смуга
+   ========================================================================== */
+
+.site-header {
+    background: var(--brand-dark);
+    border-bottom: 3px solid var(--brand-accent);
+}
+
+.site-footer {
+    background: var(--brand-dark);
+    border-top: 3px solid var(--brand-accent);
+}
+
 .footer-links a {
     color: rgba(255, 255, 255, 0.55);
     text-decoration: none;
-    transition: color 0.15s ease-in-out, padding-left 0.15s ease-in-out;
+    transition: color var(--transition-fast), padding-left var(--transition-fast);
 }
+
 .footer-links a:hover {
     color: #fff;
     padding-left: 4px;
+}
+
+
+/* ==========================================================================
+   3. Картки (шаблони резюме, самі резюме)
+   ========================================================================== */
+
+.card {
+    border-radius: var(--card-radius);
+}
+
+.card-hover {
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.card-img-placeholder {
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--brand-accent-soft);
+    color: #6c757d;
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
+}
+
+
+/* ==========================================================================
+   4. Бейджі статусу резюме
+   ========================================================================== */
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.7em;
+    border-radius: 50rem;
+}
+
+
+/* ==========================================================================
+   5. Форми
+   ========================================================================== */
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 0.2rem var(--brand-accent-soft);
+}
+
+/* Вертикальні відступи між полями при рендері {{ form.as_div }} */
+form > div:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+form label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.auth-card {
+    max-width: 480px;
+}
+
+
+/* ==========================================================================
+   6. Фото/аватар у резюме
+   ========================================================================== */
+
+.resume-photo {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+}
+
+
+/* ==========================================================================
+   7. Порожні стани (немає резюме / шаблонів / новин)
+   ========================================================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 2.5rem;
+    color: var(--brand-accent);
+    margin-bottom: 0.75rem;
+    display: block;
 }

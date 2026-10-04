@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Мої резюме{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Мої резюме</h1>
+    <a href="{% url 'main:resume_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Нове резюме
+    </a>
+</div>
+
+{% if resumes %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for resume in resumes %}
+    <div class="col">
+        <div class="card h-100 card-hover">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title">{{ resume.title }}</h5>
+                    <span class="badge status-badge {% if resume.status == 'ready' %}text-bg-success{% else %}text-bg-secondary{% endif %}">
+                        {{ resume.get_status_display }}
+                    </span>
+                </div>
+                <p class="text-muted small mb-3">Оновлено: {{ resume.updated_at|date:"d.m.Y H:i" }}</p>
+                <a href="{% url 'main:resume_detail' resume.pk %}" class="btn btn-outline-primary btn-sm">Відкрити</a>
+                <a href="{% url 'main:resume_update' resume.pk %}" class="btn btn-outline-secondary btn-sm">Редагувати</a>
+                <a href="{% url 'main:resume_delete' resume.pk %}" class="btn btn-outline-danger btn-sm">Видалити</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="bi bi-folder2-open"></i>
+    <p class="mb-2">У вас поки немає жодного резюме.</p>
+    <a href="{% url 'main:resume_create' %}" class="btn btn-primary btn-sm">Створити перше</a>
+</div>
+{% endif %}
+{% endblock %}

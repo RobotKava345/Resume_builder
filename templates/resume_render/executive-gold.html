@@ -1,0 +1,129 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}executive-gold{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* executive-gold · S5 Executive · чёрная шапка на всю ширину, золотой акцент #B8924A, Playfair в заголовках,
+   фото в золотой рамке, достижения маркерами, навыки списком в 3 колонки.
+   На первой странице верхнее поле = 0 (шапка «в край»). */
+@page { size: A4; margin: 16mm 0; }
+@page :first { margin-top: 0; }
+@media screen { .tpl-executive-gold .page { padding: 0 0 16mm; } }
+
+.tpl-executive-gold { --gold: #B8924A; --gold-text: #8F6F2E; --black: #111111; --ink: #1d1d1f; --muted: #6b6b70;
+  font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif; font-size: 10pt; line-height: 1.45; color: var(--ink); }
+
+/* Шапка */
+.tpl-executive-gold .r-header { display: flex; justify-content: space-between; align-items: center; padding: 15mm 20mm 12mm;
+  margin-bottom: 9mm; background: var(--black); color: #fff; border-bottom: 2.5pt solid var(--gold); }
+.tpl-executive-gold .r-name { margin: 0 0 3.5mm; font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: 28pt; font-weight: 700; line-height: 1.08; letter-spacing: .01em; }
+.tpl-executive-gold .r-contacts { margin: 0; padding: 0; list-style: none; color: #d8d3c6; font-size: 9.5pt; }
+.tpl-executive-gold .r-contacts li { margin-bottom: .4mm; }
+.tpl-executive-gold .r-photo { width: 30mm; height: 40mm; margin-left: 10mm; padding: 1mm; object-fit: cover;
+  background: var(--black); border: 1.2pt solid var(--gold); }
+
+/* Содержимое */
+.tpl-executive-gold .r-body { padding: 0 20mm; }
+.tpl-executive-gold .r-section { margin-bottom: 7mm; }
+.tpl-executive-gold .r-section h2 { margin: 0 0 4mm; font-family: "Playfair Display", Georgia, "Times New Roman", serif; font-size: 13pt; font-weight: 700; color: var(--black); }
+.tpl-executive-gold .r-section h2::after { content: ""; display: block; width: 14mm; height: 1.4pt; margin-top: 1.6mm; background: var(--gold); }
+.tpl-executive-gold .r-summary p { margin: 0; font-size: 10.5pt; }
+
+.tpl-executive-gold .r-entry { margin-bottom: 5mm; page-break-inside: avoid; }
+.tpl-executive-gold .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-executive-gold .r-entry-title { font-weight: 700; font-size: 11pt; }
+.tpl-executive-gold .r-entry-sub { display: block; color: var(--muted); font-weight: 600; }
+.tpl-executive-gold .r-entry-dates { color: var(--gold-text); font-weight: 600; font-size: 9.5pt; white-space: nowrap; margin-left: 4mm; }
+.tpl-executive-gold .r-entry-text { margin: 1.2mm 0 0; }
+.tpl-executive-gold .r-bullets { margin: 1.2mm 0 0; padding-left: 4.5mm; }
+.tpl-executive-gold .r-bullets li { margin-bottom: .8mm; }
+.tpl-executive-gold .r-bullets li::marker { color: var(--gold); }
+
+/* Навыки: список в 3 колонки с золотым маркером */
+.tpl-executive-gold .r-skill-list { margin: 0; padding: 0; list-style: none; column-count: 3; column-gap: 8mm; }
+.tpl-executive-gold .r-skill { position: relative; padding-left: 4mm; margin-bottom: 1.6mm; break-inside: avoid; }
+.tpl-executive-gold .r-skill::before { content: ""; position: absolute; left: 0; top: 1.7mm; width: 1.7mm; height: 1.7mm; background: var(--gold); }
+.tpl-executive-gold .r-skill-name { font-weight: 600; }
+.tpl-executive-gold .r-skill-level { display: block; color: var(--muted); font-size: 8.5pt; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <header class="r-header">
+    <div class="r-ident">
+      <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+      <ul class="r-contacts">
+        {% if resume.email %}<li>{{ resume.email }}</li>{% endif %}
+        {% if resume.phone %}<li>{{ resume.phone }}</li>{% endif %}
+        {% if resume.address %}<li>{{ resume.address }}</li>{% endif %}
+      </ul>
+    </div>
+    {% if resume.photo %}<img class="r-photo" src="{{ resume.photo.url }}" alt="">{% endif %}
+  </header>
+
+  <div class="r-body">
+
+    {% if resume.summary %}
+    <section class="r-section r-summary">
+      <h2>Профіль</h2>
+      <p>{{ resume.summary|linebreaksbr }}</p>
+    </section>
+    {% endif %}
+
+    {% with exps=resume.work_experiences.all %}{% if exps %}
+    <section class="r-section">
+      <h2>Досвід роботи</h2>
+      {% for exp in exps %}
+      <article class="r-entry">
+        <div class="r-entry-head">
+          <div><span class="r-entry-title">{{ exp.position }}</span><span class="r-entry-sub">{{ exp.company }}</span></div>
+          <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+        </div>
+        {% if exp.description %}{% with lines=exp.description.splitlines %}
+          {% if lines|length > 1 %}
+          <ul class="r-bullets">{% for line in lines %}{% if line.strip %}<li>{{ line }}</li>{% endif %}{% endfor %}</ul>
+          {% else %}
+          <p class="r-entry-text">{{ exp.description }}</p>
+          {% endif %}
+        {% endwith %}{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}{% endwith %}
+
+    {% with edus=resume.educations.all %}{% if edus %}
+    <section class="r-section">
+      <h2>Освіта</h2>
+      {% for edu in edus %}
+      <article class="r-entry">
+        <div class="r-entry-head">
+          <div><span class="r-entry-title">{{ edu.institution }}</span>{% if edu.degree %}<span class="r-entry-sub">{{ edu.degree }}</span>{% endif %}</div>
+          <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+        </div>
+        {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}{% endwith %}
+
+    {% with skills=resume.skills.all %}{% if skills %}
+    <section class="r-section">
+      <h2>Навички</h2>
+      <ul class="r-skill-list">
+        {% for skill in skills %}
+        <li class="r-skill"><span class="r-skill-name">{{ skill.name }}</span><span class="r-skill-level">{{ skill.get_level_display }}</span></li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}{% endwith %}
+
+  </div>
+</div>
+{% endblock %}

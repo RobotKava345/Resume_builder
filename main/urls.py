@@ -12,8 +12,6 @@ urlpatterns = [
     path('templates/', views.ResumeTemplateListView.as_view(), name='template_list'),
     path('templates/<int:pk>/', views.ResumeTemplateDetailView.as_view(), name='template_detail'),
 
-    # Оголошення
-    path('announcements/', views.AnnouncementListView.as_view(), name='announcement_list'),
 
     # CRUD резюме
     path('resumes/', views.ResumeListView.as_view(), name='resume_list'),
@@ -22,6 +20,8 @@ urlpatterns = [
     path('resumes/<int:pk>/edit/', views.ResumeUpdateView.as_view(), name='resume_update'),
     path('resumes/<int:pk>/delete/', views.ResumeDeleteView.as_view(), name='resume_delete'),
     path('resumes/<int:pk>/clone/', views.ResumeCloneView.as_view(), name='resume_clone'),
+    path('resumes/<int:pk>/preview/', views.ResumeRenderView.as_view(), name='resume_preview'),
+    
 
     # Експорт (заглушки)
     path('resumes/<int:pk>/export/pdf/', views.ResumeExportPDFView.as_view(), name='resume_export_pdf'),

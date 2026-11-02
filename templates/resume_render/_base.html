@@ -1,0 +1,29 @@
+{% load static %}<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% firstof resume.full_name resume.title %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  {% block head_fonts %}{% endblock %}
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* Предпросмотр в браузере: имитация листа A4 */
+    @media screen {
+      body { background: #e5e7eb; }
+      .page { width: 210mm; min-height: 297mm; margin: 8mm auto; background: #fff;
+              box-shadow: 0 2px 12px rgba(0, 0, 0, .18); }
+    }
+    @media print { .page { margin: 0; } }
+
+    {% block style %}{% endblock %}
+  </style>
+</head>
+<body class="tpl-{% block slug %}{% endblock %}">
+{% block content %}{% endblock %}
+</body>
+</html>

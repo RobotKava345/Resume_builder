@@ -138,6 +138,11 @@ class ResumeSectionMixin(LoginRequiredMixin):
             Resume, pk=self.kwargs[self.resume_url_kwarg], owner=self.request.user,
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resume'] = self.get_resume()
+        return context
+
     def get_success_url(self):
         return reverse(
             'main:resume_detail', kwargs={'pk': self.kwargs[self.resume_url_kwarg]},
@@ -206,3 +211,11 @@ class SkillUpdateView(SectionOwnedQuerysetMixin, UpdateView):
 class SkillDeleteView(SectionOwnedQuerysetMixin, DeleteView):
     model = Skill
     template_name = 'main/section_confirm_delete.html'
+
+class ResumeRenderView(OwnerResumeQuerysetMixin, DetailView):
+    model = Resume
+    context_object_name = 'resume'
+
+    def get_template_names(self):
+        slug = self.object.template.slug if self.object.template else 'classic-serif'
+        return [f'resume_render/{slug}.html', 'resume_render/classic-serif.html']

@@ -1,0 +1,110 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}classic-navy{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* classic-navy · S1 Classic · 1 колонка, имя слева + фото 3×4 справа, navy-акцент, навыки в 2 колонки */
+@page { size: A4; margin: 16mm 18mm; }
+@media screen { .tpl-classic-navy .page { padding: 16mm 18mm; } }
+
+.tpl-classic-navy { --navy: #1F3A5F; --ink: #1b1b1b; --muted: #5d6673;
+  font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif; font-size: 10pt; line-height: 1.42; color: var(--ink); }
+
+.tpl-classic-navy .r-header { display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 5mm; margin-bottom: 6mm; border-bottom: 2pt solid var(--navy); }
+.tpl-classic-navy .r-ident { flex: 1; }
+.tpl-classic-navy .r-name { margin: 0 0 2.5mm; font-size: 26pt; font-weight: 700; color: var(--navy); line-height: 1.1; }
+.tpl-classic-navy .r-contacts { margin: 0; padding: 0; list-style: none; color: var(--muted); }
+.tpl-classic-navy .r-contacts li { margin-bottom: .6mm; }
+.tpl-classic-navy .r-photo { width: 28mm; height: 37mm; object-fit: cover; margin-left: 8mm; border: .75pt solid var(--navy); }
+
+.tpl-classic-navy .r-section { margin-bottom: 6mm; }
+.tpl-classic-navy .r-section h2 { margin: 0 0 3mm; padding-bottom: 1mm; font-size: 10.5pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--navy); border-bottom: .75pt solid var(--navy); }
+.tpl-classic-navy .r-summary p { margin: 0; }
+
+.tpl-classic-navy .r-entry { margin-bottom: 4mm; page-break-inside: avoid; }
+.tpl-classic-navy .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-classic-navy .r-entry-title { font-weight: 600; font-size: 10.5pt; }
+.tpl-classic-navy .r-entry-dates { color: var(--muted); font-size: 9.5pt; white-space: nowrap; }
+.tpl-classic-navy .r-entry-text { margin: 1mm 0 0; }
+
+.tpl-classic-navy .r-skill-list { margin: 0; padding: 0; list-style: none; column-count: 2; column-gap: 10mm; }
+.tpl-classic-navy .r-skill { display: flex; justify-content: space-between; margin-bottom: 1mm; break-inside: avoid; }
+.tpl-classic-navy .r-skill-name { font-weight: 600; }
+.tpl-classic-navy .r-skill-level { color: var(--muted); font-size: 9pt; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <header class="r-header">
+    <div class="r-ident">
+      <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+      <ul class="r-contacts">
+        {% if resume.email %}<li>{{ resume.email }}</li>{% endif %}
+        {% if resume.phone %}<li>{{ resume.phone }}</li>{% endif %}
+        {% if resume.address %}<li>{{ resume.address }}</li>{% endif %}
+      </ul>
+    </div>
+    {% if resume.photo %}<img class="r-photo" src="{{ resume.photo.url }}" alt="">{% endif %}
+  </header>
+
+  {% if resume.summary %}
+  <section class="r-section r-summary">
+    <h2>Про себе</h2>
+    <p>{{ resume.summary|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+
+  {% with exps=resume.work_experiences.all %}{% if exps %}
+  <section class="r-section">
+    <h2>Досвід роботи</h2>
+    {% for exp in exps %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <span class="r-entry-title">{{ exp.position }} — {{ exp.company }}</span>
+        <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+      </div>
+      {% if exp.description %}<p class="r-entry-text">{{ exp.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with edus=resume.educations.all %}{% if edus %}
+  <section class="r-section">
+    <h2>Освіта</h2>
+    {% for edu in edus %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <span class="r-entry-title">{{ edu.institution }}{% if edu.degree %} — {{ edu.degree }}{% endif %}</span>
+        <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+      </div>
+      {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with skills=resume.skills.all %}{% if skills %}
+  <section class="r-section">
+    <h2>Навички</h2>
+    <ul class="r-skill-list">
+      {% for skill in skills %}
+      <li class="r-skill">
+        <span class="r-skill-name">{{ skill.name }}</span>
+        <span class="r-skill-level">{{ skill.get_level_display }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}{% endwith %}
+
+</div>
+{% endblock %}

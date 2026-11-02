@@ -1,0 +1,128 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}tech-terminal{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* tech-terminal · S6 Tech · тёмная «терминальная» шапка на всю ширину, зелёный акцент, JetBrains Mono в заголовках,
+   секции вида «## Заголовок», контакты как key: value, навыки тегами. Без фото.
+   На первой странице верхнее поле = 0 (шапка «в край»). */
+@page { size: A4; margin: 16mm 0; }
+@page :first { margin-top: 0; }
+@media screen { .tpl-tech-terminal .page { padding: 0 0 16mm; } }
+
+.tpl-tech-terminal { --bg: #0D1117; --green: #3FB950; --green-deep: #1A7F37; --ink: #1f2328; --muted: #656d76;
+  --mono: "JetBrains Mono", "Consolas", "Courier New", monospace;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif; font-size: 9.5pt; line-height: 1.5; color: var(--ink); }
+
+/* Шапка-терминал */
+.tpl-tech-terminal .r-header { padding: 13mm 20mm 11mm; margin-bottom: 9mm; background: var(--bg); color: #C9D1D9; border-bottom: 2pt solid var(--green); }
+.tpl-tech-terminal .prompt { margin-bottom: 2.5mm; font-family: var(--mono); font-size: 8.5pt; color: var(--green); }
+.tpl-tech-terminal .r-name { margin: 0 0 4mm; font-family: var(--mono); font-size: 22pt; font-weight: 700; line-height: 1.1; color: #fff; }
+.tpl-tech-terminal .r-name::after { content: ""; display: inline-block; width: 3mm; height: 5.6mm; margin-left: 2mm; vertical-align: -.7mm; background: var(--green); }
+.tpl-tech-terminal .r-contacts { margin: 0; padding: 0; list-style: none; font-family: var(--mono); font-size: 8.5pt; }
+.tpl-tech-terminal .r-contacts li { margin-bottom: .6mm; }
+.tpl-tech-terminal .k { display: inline-block; width: 17mm; color: var(--green); }
+.tpl-tech-terminal .k::after { content: ":"; }
+
+/* Содержимое */
+.tpl-tech-terminal .r-body { padding: 0 20mm; }
+.tpl-tech-terminal .r-section { margin-bottom: 7mm; }
+.tpl-tech-terminal .r-section h2 { margin: 0 0 3.5mm; font-family: var(--mono); font-size: 10.5pt; font-weight: 700; color: var(--ink); }
+.tpl-tech-terminal .r-section h2::before { content: "## "; color: var(--green-deep); }
+.tpl-tech-terminal .r-summary p { margin: 0; }
+
+.tpl-tech-terminal .r-entry { margin-bottom: 5mm; page-break-inside: avoid; }
+.tpl-tech-terminal .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-tech-terminal .r-entry-title { font-weight: 600; font-size: 10.5pt; }
+.tpl-tech-terminal .r-entry-sub { color: var(--green-deep); font-weight: 600; margin-left: 1.5mm; }
+.tpl-tech-terminal .r-entry-sub::before { content: "@ "; }
+.tpl-tech-terminal .r-entry-dates { margin-left: 4mm; font-family: var(--mono); font-size: 8.5pt; color: var(--muted); white-space: nowrap; }
+.tpl-tech-terminal .r-entry-text { margin: 1.2mm 0 0; }
+.tpl-tech-terminal .r-bullets { margin: 1.2mm 0 0; padding: 0; list-style: none; }
+.tpl-tech-terminal .r-bullets li { position: relative; margin-bottom: .8mm; padding-left: 4.5mm; }
+.tpl-tech-terminal .r-bullets li::before { content: "›"; position: absolute; left: 0; color: var(--green-deep); font-family: var(--mono); font-weight: 700; }
+
+/* Навыки: теги, стиль зависит от уровня */
+.tpl-tech-terminal .r-skill-list { margin: 0; padding: 0; list-style: none; }
+.tpl-tech-terminal .r-skill { display: inline-block; margin: 0 1.6mm 2mm 0; padding: .8mm 2.8mm; border-radius: 1.2mm; font-family: var(--mono); font-size: 8.5pt;
+  background: #fff; color: var(--muted); border: .6pt solid #d0d7de; }
+.tpl-tech-terminal .r-skill.lvl-3 { color: var(--ink); border-color: var(--ink); }
+.tpl-tech-terminal .r-skill.lvl-4 { background: var(--bg); color: var(--green); border-color: var(--bg); }
+.tpl-tech-terminal .r-skill.lvl-5 { background: var(--green); color: var(--bg); border-color: var(--green); font-weight: 700; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <header class="r-header">
+    <div class="prompt">$ whoami</div>
+    <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+    <ul class="r-contacts">
+      {% if resume.email %}<li><span class="k">email</span>{{ resume.email }}</li>{% endif %}
+      {% if resume.phone %}<li><span class="k">phone</span>{{ resume.phone }}</li>{% endif %}
+      {% if resume.address %}<li><span class="k">location</span>{{ resume.address }}</li>{% endif %}
+    </ul>
+  </header>
+
+  <div class="r-body">
+
+    {% if resume.summary %}
+    <section class="r-section r-summary">
+      <h2>Про себе</h2>
+      <p>{{ resume.summary|linebreaksbr }}</p>
+    </section>
+    {% endif %}
+
+    {% with exps=resume.work_experiences.all %}{% if exps %}
+    <section class="r-section">
+      <h2>Досвід роботи</h2>
+      {% for exp in exps %}
+      <article class="r-entry">
+        <div class="r-entry-head">
+          <div><span class="r-entry-title">{{ exp.position }}</span><span class="r-entry-sub">{{ exp.company }}</span></div>
+          <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}now{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+        </div>
+        {% if exp.description %}{% with lines=exp.description.splitlines %}
+          {% if lines|length > 1 %}
+          <ul class="r-bullets">{% for line in lines %}{% if line.strip %}<li>{{ line }}</li>{% endif %}{% endfor %}</ul>
+          {% else %}
+          <p class="r-entry-text">{{ exp.description }}</p>
+          {% endif %}
+        {% endwith %}{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}{% endwith %}
+
+    {% with edus=resume.educations.all %}{% if edus %}
+    <section class="r-section">
+      <h2>Освіта</h2>
+      {% for edu in edus %}
+      <article class="r-entry">
+        <div class="r-entry-head">
+          <div><span class="r-entry-title">{{ edu.institution }}</span>{% if edu.degree %}<span class="r-entry-sub">{{ edu.degree }}</span>{% endif %}</div>
+          <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+        </div>
+        {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}{% endwith %}
+
+    {% with skills=resume.skills.all %}{% if skills %}
+    <section class="r-section">
+      <h2>Навички</h2>
+      <ul class="r-skill-list">
+        {% for skill in skills %}<li class="r-skill lvl-{{ skill.level }}">{{ skill.name }}</li>{% endfor %}
+      </ul>
+    </section>
+    {% endif %}{% endwith %}
+
+  </div>
+</div>
+{% endblock %}

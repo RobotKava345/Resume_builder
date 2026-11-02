@@ -1,0 +1,122 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}tech-light{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* tech-light · S6 Tech · светлый фон, акцент фиолетовый #7C3AED, моноширинный для дат и тегов,
+   заголовки «// Секция», навыки группами по уровню (regroup). Без фото. */
+@page { size: A4; margin: 18mm 20mm; }
+@media screen { .tpl-tech-light .page { padding: 18mm 20mm; } }
+
+.tpl-tech-light { --violet: #7C3AED; --violet-deep: #5B21B6; --tint: #F3F0FF; --ink: #1f2328; --muted: #6b7280; --rule: #E5E7EB;
+  --mono: "JetBrains Mono", "Consolas", "Courier New", monospace;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif; font-size: 9.5pt; line-height: 1.5; color: var(--ink); }
+
+.tpl-tech-light .r-header { padding-bottom: 5mm; margin-bottom: 8mm; border-bottom: 1pt solid var(--rule); position: relative; }
+.tpl-tech-light .r-header::after { content: ""; position: absolute; left: 0; bottom: -1pt; width: 22mm; height: 2pt; background: var(--violet); }
+.tpl-tech-light .r-name { margin: 0 0 2.5mm; font-size: 25pt; font-weight: 700; letter-spacing: -.015em; line-height: 1.08; }
+.tpl-tech-light .r-contacts { margin: 0; padding: 0; list-style: none; font-family: var(--mono); font-size: 8.5pt; color: var(--muted); }
+.tpl-tech-light .r-contacts li { display: inline; }
+.tpl-tech-light .r-contacts li + li::before { content: "/"; margin: 0 2.5mm; color: var(--violet); }
+
+.tpl-tech-light .r-section { margin-bottom: 7mm; }
+.tpl-tech-light .r-section h2 { margin: 0 0 3.5mm; font-family: var(--mono); font-size: 10pt; font-weight: 700; color: var(--violet-deep); }
+.tpl-tech-light .r-section h2::before { content: "// "; color: #a8aeba; }
+.tpl-tech-light .r-summary p { margin: 0; }
+
+/* Записи с направляющей слева */
+.tpl-tech-light .r-entry { margin-bottom: 5mm; padding-left: 4mm; border-left: 1.5pt solid #E4DDFB; page-break-inside: avoid; }
+.tpl-tech-light .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-tech-light .r-entry-title { font-weight: 600; font-size: 10.5pt; }
+.tpl-tech-light .r-entry-sub { display: block; color: var(--violet-deep); font-weight: 600; }
+.tpl-tech-light .r-entry-dates { margin-left: 4mm; font-family: var(--mono); font-size: 8.5pt; color: var(--muted); white-space: nowrap; }
+.tpl-tech-light .r-entry-text { margin: 1.2mm 0 0; }
+.tpl-tech-light .r-bullets { margin: 1.2mm 0 0; padding: 0; list-style: none; }
+.tpl-tech-light .r-bullets li { position: relative; margin-bottom: .8mm; padding-left: 4.5mm; }
+.tpl-tech-light .r-bullets li::before { content: "›"; position: absolute; left: 0; color: var(--violet); font-family: var(--mono); font-weight: 700; }
+
+/* Навыки: строка на уровень — метка группы слева, теги справа */
+.tpl-tech-light .r-skill-group { display: flex; align-items: baseline; margin-bottom: 2.4mm; break-inside: avoid; }
+.tpl-tech-light .r-group-label { width: 26mm; flex-shrink: 0; font-family: var(--mono); font-size: 8pt; color: var(--muted); }
+.tpl-tech-light .r-group-tags { flex: 1; margin: 0; padding: 0; list-style: none; }
+.tpl-tech-light .r-skill { display: inline-block; margin: 0 1.5mm 1.5mm 0; padding: .7mm 2.6mm; border-radius: 1.2mm; background: var(--tint); color: var(--violet-deep);
+  font-family: var(--mono); font-size: 8.5pt; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <header class="r-header">
+    <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+    <ul class="r-contacts">
+      {% if resume.email %}<li>{{ resume.email }}</li>{% endif %}
+      {% if resume.phone %}<li>{{ resume.phone }}</li>{% endif %}
+      {% if resume.address %}<li>{{ resume.address }}</li>{% endif %}
+    </ul>
+  </header>
+
+  {% if resume.summary %}
+  <section class="r-section r-summary">
+    <h2>Про себе</h2>
+    <p>{{ resume.summary|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+
+  {% with exps=resume.work_experiences.all %}{% if exps %}
+  <section class="r-section">
+    <h2>Досвід роботи</h2>
+    {% for exp in exps %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <div><span class="r-entry-title">{{ exp.position }}</span><span class="r-entry-sub">{{ exp.company }}</span></div>
+        <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}now{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+      </div>
+      {% if exp.description %}{% with lines=exp.description.splitlines %}
+        {% if lines|length > 1 %}
+        <ul class="r-bullets">{% for line in lines %}{% if line.strip %}<li>{{ line }}</li>{% endif %}{% endfor %}</ul>
+        {% else %}
+        <p class="r-entry-text">{{ exp.description }}</p>
+        {% endif %}
+      {% endwith %}{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with edus=resume.educations.all %}{% if edus %}
+  <section class="r-section">
+    <h2>Освіта</h2>
+    {% for edu in edus %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <div><span class="r-entry-title">{{ edu.institution }}</span>{% if edu.degree %}<span class="r-entry-sub">{{ edu.degree }}</span>{% endif %}</div>
+        <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+      </div>
+      {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with skills=resume.skills.all %}{% if skills %}
+  <section class="r-section">
+    <h2>Навички</h2>
+    {% regroup skills|dictsortreversed:"level" by get_level_display as skill_groups %}
+    {% for group in skill_groups %}
+    <div class="r-skill-group">
+      <span class="r-group-label">{{ group.grouper }}</span>
+      <ul class="r-group-tags">
+        {% for skill in group.list %}<li class="r-skill">{{ skill.name }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+</div>
+{% endblock %}

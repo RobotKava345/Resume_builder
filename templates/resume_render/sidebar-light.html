@@ -1,0 +1,121 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}sidebar-light{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* sidebar-light · S3 Sidebar · светло-серый сайдбар СПРАВА 66 мм, бирюзовый акцент, фото квадрат со скруглением, навыки полосками */
+@page { size: A4; margin: 15mm 0; }
+@media screen { .tpl-sidebar-light .page { position: relative; padding: 15mm 0; } }
+
+.tpl-sidebar-light { --side: #F1F5F9; --accent: #0D9488; --ink: #1e293b; --muted: #64748b;
+  font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif; font-size: 10pt; line-height: 1.45; color: var(--ink); }
+.tpl-sidebar-light .page::after { content: ""; display: block; clear: both; }
+
+.tpl-sidebar-light .sidebar-bg { position: fixed; top: -15mm; bottom: -15mm; right: 0; width: 66mm; background: var(--side); }
+@media screen { .tpl-sidebar-light .sidebar-bg { position: absolute; top: 0; bottom: 0; } }
+
+/* Сайдбар (справа) */
+.tpl-sidebar-light .sidebar { float: right; width: 66mm; padding: 0 9mm 0 8mm; }
+.tpl-sidebar-light .r-photo { display: block; width: 38mm; height: 38mm; margin: 0 0 8mm; border-radius: 4mm; object-fit: cover; }
+.tpl-sidebar-light .sidebar h2 { margin: 0 0 3mm; font-size: 8.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: var(--accent); }
+.tpl-sidebar-light .side-block { margin-bottom: 8mm; }
+.tpl-sidebar-light .c-item { margin-bottom: 2.5mm; }
+.tpl-sidebar-light .c-label { display: block; font-size: 7.5pt; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.tpl-sidebar-light .c-value { display: block; font-size: 9.5pt; overflow-wrap: anywhere; }
+.tpl-sidebar-light .r-skill { margin-bottom: 3mm; break-inside: avoid; }
+.tpl-sidebar-light .r-skill-name { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 1mm; }
+.tpl-sidebar-light .r-skill-level { font-weight: 400; font-size: 8pt; color: var(--muted); }
+.tpl-sidebar-light .bar { height: 1.4mm; border-radius: 1mm; background: #D5DEE8; }
+.tpl-sidebar-light .bar-fill { height: 100%; border-radius: 1mm; background: var(--accent); }
+
+/* Основная колонка (слева) */
+.tpl-sidebar-light .main { margin-right: 66mm; padding: 0 12mm 0 16mm; }
+.tpl-sidebar-light .r-name { margin: 0 0 7mm; font-size: 27pt; font-weight: 700; line-height: 1.05; color: #0f172a; }
+.tpl-sidebar-light .r-section { margin-bottom: 7mm; }
+.tpl-sidebar-light .main h2 { margin: 0 0 3.5mm; padding-bottom: 1.2mm; font-size: 10pt; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--accent); border-bottom: 1pt solid var(--accent); }
+.tpl-sidebar-light .r-summary p { margin: 0; }
+.tpl-sidebar-light .r-entry { margin-bottom: 4.5mm; page-break-inside: avoid; }
+.tpl-sidebar-light .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-sidebar-light .r-entry-title { font-weight: 700; font-size: 10.5pt; }
+.tpl-sidebar-light .r-entry-sub { display: block; color: var(--muted); font-weight: 600; }
+.tpl-sidebar-light .r-entry-dates { color: var(--muted); font-size: 9pt; white-space: nowrap; margin-left: 4mm; }
+.tpl-sidebar-light .r-entry-text { margin: 1mm 0 0; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="sidebar-bg"></div>
+
+  <aside class="sidebar">
+    {% if resume.photo %}<img class="r-photo" src="{{ resume.photo.url }}" alt="">{% endif %}
+
+    {% if resume.email or resume.phone or resume.address %}
+    <div class="side-block">
+      <h2>Контакти</h2>
+      {% if resume.email %}<div class="c-item"><span class="c-label">Email</span><span class="c-value">{{ resume.email }}</span></div>{% endif %}
+      {% if resume.phone %}<div class="c-item"><span class="c-label">Телефон</span><span class="c-value">{{ resume.phone }}</span></div>{% endif %}
+      {% if resume.address %}<div class="c-item"><span class="c-label">Адреса</span><span class="c-value">{{ resume.address }}</span></div>{% endif %}
+    </div>
+    {% endif %}
+
+    {% with skills=resume.skills.all %}{% if skills %}
+    <div class="side-block">
+      <h2>Навички</h2>
+      {% for skill in skills %}
+      <div class="r-skill">
+        <span class="r-skill-name"><span>{{ skill.name }}</span><span class="r-skill-level">{{ skill.get_level_display }}</span></span>
+        <div class="bar"><div class="bar-fill" style="width: {% widthratio skill.level 5 100 %}%"></div></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}{% endwith %}
+  </aside>
+
+  <main class="main">
+    <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+
+    {% if resume.summary %}
+    <section class="r-section r-summary">
+      <h2>Про себе</h2>
+      <p>{{ resume.summary|linebreaksbr }}</p>
+    </section>
+    {% endif %}
+
+    {% with exps=resume.work_experiences.all %}{% if exps %}
+    <section class="r-section">
+      <h2>Досвід роботи</h2>
+      {% for exp in exps %}
+      <article class="r-entry">
+        <div class="r-entry-head">
+          <div><span class="r-entry-title">{{ exp.position }}</span><span class="r-entry-sub">{{ exp.company }}</span></div>
+          <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+        </div>
+        {% if exp.description %}<p class="r-entry-text">{{ exp.description|linebreaksbr }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}{% endwith %}
+
+    {% with edus=resume.educations.all %}{% if edus %}
+    <section class="r-section">
+      <h2>Освіта</h2>
+      {% for edu in edus %}
+      <article class="r-entry">
+        <div class="r-entry-head">
+          <div><span class="r-entry-title">{{ edu.institution }}</span>{% if edu.degree %}<span class="r-entry-sub">{{ edu.degree }}</span>{% endif %}</div>
+          <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+        </div>
+        {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}{% endwith %}
+  </main>
+</div>
+{% endblock %}

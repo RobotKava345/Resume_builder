@@ -1,0 +1,132 @@
+[
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Classic Serif",
+      "slug": "classic-serif",
+      "description": "Класичний шаблон з засічками: одна колонка, шапка по центру, тонкі лінії-розділювачі. Без фото, навички через кому.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Classic Navy",
+      "slug": "classic-navy",
+      "description": "Класичний шаблон з темно-синім акцентом: ім'я зліва, фото 3×4 справа, навички у дві колонки з рівнем.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Minimal Light",
+      "slug": "minimal-light",
+      "description": "Мінімалістичний шаблон з великими полями та синім акцентом. Невелике кругле фото, навички у вигляді чипів.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Minimal Mono",
+      "slug": "minimal-mono",
+      "description": "Суворий чорно-білий мінімалізм: дати в лівій колонці, навички з рівнем у вигляді крапок. Без фото.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Sidebar Dark",
+      "slug": "sidebar-dark",
+      "description": "Двоколонковий шаблон з темним сайдбаром зліва: кругле фото, контакти, навички смужками. Справа — досвід та освіта.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Sidebar Light",
+      "slug": "sidebar-light",
+      "description": "Світлий сайдбар справа з бірюзовим акцентом: фото зі скругленням, контакти, навички смужками з рівнем.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Sidebar Sage",
+      "slug": "sidebar-sage",
+      "description": "М'який зелений сайдбар зліва на кремовому тлі: кругле фото, навички у вигляді крапок. Шрифт Lato.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Color Block",
+      "slug": "creative-block",
+      "description": "Креативний шаблон з градієнтною шапкою на всю ширину, круглим фото на межі шапки та кольоровими чипами навичок.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Pastel Cards",
+      "slug": "creative-pastel",
+      "description": "М'який шаблон із секціями-картками на пастельних фонах, шрифт Nunito, навички бейджами з рівнем.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Executive Slate",
+      "slug": "executive-slate",
+      "description": "Стриманий керівницький шаблон: графітова палітра, ім'я зліва та контакти справа, досягнення маркерами, навички стовпчиком з рівнем.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Executive Gold",
+      "slug": "executive-gold",
+      "description": "Елегантний шаблон з чорною шапкою та золотим акцентом, заголовки Playfair, фото в золотій рамці, навички списком.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Dev Terminal",
+      "slug": "tech-terminal",
+      "description": "Технічний шаблон у стилі терміналу: темна шапка, зелений акцент, моноширинні заголовки «## Секція», навички тегами.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  },
+  {
+    "model": "main.resumetemplate",
+    "fields": {
+      "name": "Dev Light",
+      "slug": "tech-light",
+      "description": "Світлий технічний шаблон з фіолетовим акцентом: моноширинні дати та теги, навички згруповані за рівнем. Без фото.",
+      "is_active": true,
+      "created_at": "2026-11-02T00:00:00Z"
+    }
+  }
+]

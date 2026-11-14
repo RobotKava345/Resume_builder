@@ -10,6 +10,7 @@ urlpatterns = [
 
     # Каталог шаблонів
     path('templates/', views.ResumeTemplateListView.as_view(), name='template_list'),
+    path('templates/<int:pk>/mini-preview/', views.ResumeTemplateMiniPreviewView.as_view(), name='template_mini_preview'),
     path('templates/<int:pk>/', views.ResumeTemplateDetailView.as_view(), name='template_detail'),
 
 

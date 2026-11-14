@@ -11,15 +11,13 @@
         </span>
     </div>
     <div class="d-flex gap-2 flex-wrap">
-        <a href="{% url 'main:resume_update' resume.pk %}" class="btn btn-outline-secondary">Редагувати</a>
+        <a href="{% url 'main:resume_update' resume.pk %}" class="btn btn-outline-secondary" data-modal-form>Редагувати</a>
         <form action="{% url 'main:resume_clone' resume.pk %}" method="post" class="d-inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-secondary">Клонувати</button>
         </form>
-        <a href="{% url 'main:resume_export_pdf' resume.pk %}" class="btn btn-outline-primary">Експорт PDF</a>
-        <a href="{% url 'main:resume_export_docx' resume.pk %}" class="btn btn-outline-primary">Експорт DOCX</a>
-        <a href="{% url 'main:resume_delete' resume.pk %}" class="btn btn-outline-danger">Видалити</a>
         <a href="{% url 'main:resume_preview' resume.pk %}" class="btn btn-outline-info">Попередній перегляд</a>
+        <a href="{% url 'main:resume_delete' resume.pk %}" class="btn btn-outline-danger" data-modal-form>Видалити</a>
     </div>
 </div>
 
@@ -48,7 +46,7 @@
 <!-- Досвід роботи -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Досвід роботи</h3>
-    <a href="{% url 'main:experience_add' resume.pk %}" class="btn btn-sm btn-outline-primary">
+    <a href="{% url 'main:experience_add' resume.pk %}" class="btn btn-sm btn-outline-primary" data-modal-form>
         <i class="bi bi-plus-lg"></i> Додати
     </a>
 </div>
@@ -63,8 +61,8 @@
             <p class="mb-0">{{ exp.description }}</p>
         </div>
         <div class="d-flex gap-2 flex-shrink-0">
-            <a href="{% url 'main:experience_edit' resume.pk exp.pk %}" class="btn btn-sm btn-outline-secondary">Редагувати</a>
-            <a href="{% url 'main:experience_delete' resume.pk exp.pk %}" class="btn btn-sm btn-outline-danger">Видалити</a>
+            <a href="{% url 'main:experience_edit' resume.pk exp.pk %}" class="btn btn-sm btn-outline-secondary" data-modal-form>Редагувати</a>
+            <a href="{% url 'main:experience_delete' resume.pk exp.pk %}" class="btn btn-sm btn-outline-danger" data-modal-form>Видалити</a>
         </div>
     </div>
 </div>
@@ -75,7 +73,7 @@
 <!-- Освіта -->
 <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
     <h3 class="mb-0">Освіта</h3>
-    <a href="{% url 'main:education_add' resume.pk %}" class="btn btn-sm btn-outline-primary">
+    <a href="{% url 'main:education_add' resume.pk %}" class="btn btn-sm btn-outline-primary" data-modal-form>
         <i class="bi bi-plus-lg"></i> Додати
     </a>
 </div>
@@ -90,8 +88,8 @@
             <p class="mb-0">{{ edu.description }}</p>
         </div>
         <div class="d-flex gap-2 flex-shrink-0">
-            <a href="{% url 'main:education_edit' resume.pk edu.pk %}" class="btn btn-sm btn-outline-secondary">Редагувати</a>
-            <a href="{% url 'main:education_delete' resume.pk edu.pk %}" class="btn btn-sm btn-outline-danger">Видалити</a>
+            <a href="{% url 'main:education_edit' resume.pk edu.pk %}" class="btn btn-sm btn-outline-secondary" data-modal-form>Редагувати</a>
+            <a href="{% url 'main:education_delete' resume.pk edu.pk %}" class="btn btn-sm btn-outline-danger" data-modal-form>Видалити</a>
         </div>
     </div>
 </div>
@@ -102,7 +100,7 @@
 <!-- Навички -->
 <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
     <h3 class="mb-0">Навички</h3>
-    <a href="{% url 'main:skill_add' resume.pk %}" class="btn btn-sm btn-outline-primary">
+    <a href="{% url 'main:skill_add' resume.pk %}" class="btn btn-sm btn-outline-primary" data-modal-form>
         <i class="bi bi-plus-lg"></i> Додати
     </a>
 </div>
@@ -111,10 +109,10 @@
     {% for skill in resume.skills.all %}
     <span class="badge text-bg-light border d-flex align-items-center gap-2 p-2">
         {{ skill.name }} ({{ skill.get_level_display }})
-        <a href="{% url 'main:skill_edit' resume.pk skill.pk %}" class="text-decoration-none">
+        <a href="{% url 'main:skill_edit' resume.pk skill.pk %}" class="text-decoration-none" data-modal-form>
             <i class="bi bi-pencil"></i>
         </a>
-        <a href="{% url 'main:skill_delete' resume.pk skill.pk %}" class="text-decoration-none text-danger">
+        <a href="{% url 'main:skill_delete' resume.pk skill.pk %}" class="text-decoration-none text-danger" data-modal-form>
             <i class="bi bi-x-lg"></i>
         </a>
     </span>

@@ -2,6 +2,30 @@
 
 {% block title %}Каталог шаблонів{% endblock %}
 
+{% block extra_css %}
+<style>
+    .template-mini-preview {
+        position: relative;
+        height: 300px;
+        overflow: hidden;
+        background: #eaf0f8;
+        border-bottom: 1px solid rgba(0, 0, 0, .08);
+    }
+    .template-mini-preview iframe {
+        position: absolute;
+        top: 0;
+        left: calc(50% - 166.75px);
+        width: 794px;
+        height: 1123px;
+        border: 0;
+        transform-origin: top left;
+        transform: scale(.42);
+        pointer-events: none;
+        background: white;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <h1 class="mb-4">Каталог шаблонів резюме</h1>
 
@@ -10,13 +34,14 @@
     {% for tmpl in templates %}
     <div class="col">
         <div class="card h-100 card-hover">
-            {% if tmpl.preview_image %}
-            <img src="{{ tmpl.preview_image.url }}" class="card-img-top" alt="{{ tmpl.name }}">
-            {% else %}
-            <div class="card-img-placeholder">
-                <span>Без превʼю</span>
+            <div class="template-mini-preview" data-template-mini-preview>
+                <iframe
+                    src="{% url 'main:template_mini_preview' tmpl.pk %}"
+                    title="Мініатюра шаблону {{ tmpl.name }}"
+                    loading="lazy"
+                    sandbox="allow-same-origin"
+                    aria-hidden="true"></iframe>
             </div>
-            {% endif %}
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title">{{ tmpl.name }}</h5>
                 <p class="card-text text-muted small flex-grow-1">{{ tmpl.description|truncatewords:20 }}</p>

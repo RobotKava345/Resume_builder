@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Видалення резюме{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <h1 class="h4 mb-3">Видалити резюме?</h1>
+    <p>Ви впевнені, що хочете видалити «{{ object.title }}»? Цю дію неможливо скасувати.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Так, видалити</button>
+        <a href="{% url 'main:resume_detail' object.pk %}" class="btn btn-outline-secondary">Скасувати</a>
+    </form>
+</div>
+{% endblock %}

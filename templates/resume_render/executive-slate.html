@@ -1,0 +1,115 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}executive-slate{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* executive-slate · S5 Executive · 1 колонка, имя слева / контакты справа, графит + серый, Source Sans,
+   достижения маркерами, навыки столбиком с уровнем текстом, без фото */
+@page { size: A4; margin: 18mm 20mm; }
+@media screen { .tpl-executive-slate .page { padding: 18mm 20mm; } }
+
+.tpl-executive-slate { --graphite: #2B2F36; --steel: #4B5563; --muted: #6B7280; --rule: #D1D5DB;
+  font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif; font-size: 10pt; line-height: 1.45; color: var(--graphite); }
+
+.tpl-executive-slate .r-header { display: flex; justify-content: space-between; align-items: flex-end;
+  padding-bottom: 5mm; margin-bottom: 7mm; border-bottom: 2pt solid var(--graphite); }
+.tpl-executive-slate .r-name { margin: 0; font-size: 24pt; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; line-height: 1.05; }
+.tpl-executive-slate .r-contacts { margin: 0 0 0 10mm; padding: 0; list-style: none; text-align: right; color: var(--muted); font-size: 9.5pt; }
+.tpl-executive-slate .r-contacts li { margin-bottom: .4mm; }
+
+.tpl-executive-slate .r-section { margin-bottom: 7mm; }
+.tpl-executive-slate .r-section h2 { margin: 0 0 3.5mm; padding-bottom: 1.2mm; font-size: 9.5pt; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .16em; color: var(--steel); border-bottom: .6pt solid var(--rule); }
+.tpl-executive-slate .r-summary p { margin: 0; font-size: 10.5pt; }
+
+.tpl-executive-slate .r-entry { margin-bottom: 5mm; page-break-inside: avoid; }
+.tpl-executive-slate .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-executive-slate .r-entry-title { font-weight: 700; font-size: 11pt; }
+.tpl-executive-slate .r-entry-sub { color: var(--steel); font-weight: 600; margin-left: 1.5mm; }
+.tpl-executive-slate .r-entry-sub::before { content: "|"; margin-right: 1.8mm; color: var(--rule); }
+.tpl-executive-slate .r-entry-dates { color: var(--muted); font-size: 9.5pt; white-space: nowrap; margin-left: 4mm; }
+.tpl-executive-slate .r-entry-text { margin: 1.2mm 0 0; }
+.tpl-executive-slate .r-bullets { margin: 1.2mm 0 0; padding-left: 4.5mm; }
+.tpl-executive-slate .r-bullets li { margin-bottom: .8mm; }
+.tpl-executive-slate .r-bullets li::marker { color: var(--muted); }
+
+/* Навыки: один столбик, справа уровень текстом */
+.tpl-executive-slate .r-skill-list { margin: 0; padding: 0; list-style: none; max-width: 90mm; }
+.tpl-executive-slate .r-skill { display: flex; justify-content: space-between; padding: 1mm 0; border-bottom: .4pt solid var(--rule); break-inside: avoid; }
+.tpl-executive-slate .r-skill-name { font-weight: 600; }
+.tpl-executive-slate .r-skill-level { color: var(--muted); }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <header class="r-header">
+    <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+    <ul class="r-contacts">
+      {% if resume.email %}<li>{{ resume.email }}</li>{% endif %}
+      {% if resume.phone %}<li>{{ resume.phone }}</li>{% endif %}
+      {% if resume.address %}<li>{{ resume.address }}</li>{% endif %}
+    </ul>
+  </header>
+
+  {% if resume.summary %}
+  <section class="r-section r-summary">
+    <h2>Профіль</h2>
+    <p>{{ resume.summary|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+
+  {% with exps=resume.work_experiences.all %}{% if exps %}
+  <section class="r-section">
+    <h2>Досвід роботи</h2>
+    {% for exp in exps %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <div><span class="r-entry-title">{{ exp.position }}</span><span class="r-entry-sub">{{ exp.company }}</span></div>
+        <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+      </div>
+      {% if exp.description %}{% with lines=exp.description.splitlines %}
+        {% if lines|length > 1 %}
+        <ul class="r-bullets">{% for line in lines %}{% if line.strip %}<li>{{ line }}</li>{% endif %}{% endfor %}</ul>
+        {% else %}
+        <p class="r-entry-text">{{ exp.description }}</p>
+        {% endif %}
+      {% endwith %}{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with edus=resume.educations.all %}{% if edus %}
+  <section class="r-section">
+    <h2>Освіта</h2>
+    {% for edu in edus %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <div><span class="r-entry-title">{{ edu.institution }}</span>{% if edu.degree %}<span class="r-entry-sub">{{ edu.degree }}</span>{% endif %}</div>
+        <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+      </div>
+      {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with skills=resume.skills.all %}{% if skills %}
+  <section class="r-section">
+    <h2>Навички</h2>
+    <ul class="r-skill-list">
+      {% for skill in skills %}
+      <li class="r-skill"><span class="r-skill-name">{{ skill.name }}</span><span class="r-skill-level">{{ skill.get_level_display }}</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}{% endwith %}
+
+</div>
+{% endblock %}

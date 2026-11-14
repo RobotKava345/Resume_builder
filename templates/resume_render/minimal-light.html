@@ -1,0 +1,108 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}minimal-light{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* minimal-light · S2 Minimal · 1 колонка, широкие поля, акцент #2563EB, навыки чипами, маленькое круглое фото */
+@page { size: A4; margin: 22mm 24mm; }
+@media screen { .tpl-minimal-light .page { padding: 22mm 24mm; } }
+
+.tpl-minimal-light { --accent: #2563EB; --ink: #1f2430; --muted: #7a8190; --tint: #EEF3FF;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif; font-size: 9.5pt; line-height: 1.5; color: var(--ink); }
+
+.tpl-minimal-light .r-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 11mm; }
+.tpl-minimal-light .r-name { margin: 0 0 2mm; font-size: 22pt; font-weight: 600; letter-spacing: -.01em; line-height: 1.1; }
+.tpl-minimal-light .r-contacts { margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 9pt; }
+.tpl-minimal-light .r-contacts li { display: inline; }
+.tpl-minimal-light .r-contacts li + li::before { content: "·"; margin: 0 2.5mm; }
+.tpl-minimal-light .r-photo { width: 22mm; height: 22mm; border-radius: 50%; object-fit: cover; margin-left: 8mm; }
+
+.tpl-minimal-light .r-section { margin-bottom: 9mm; }
+.tpl-minimal-light .r-section h2 { margin: 0 0 3.5mm; font-size: 7.5pt; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .2em; color: var(--accent); }
+.tpl-minimal-light .r-summary p { margin: 0; }
+
+.tpl-minimal-light .r-entry { margin-bottom: 5mm; page-break-inside: avoid; }
+.tpl-minimal-light .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-minimal-light .r-entry-title { font-weight: 600; font-size: 10pt; }
+.tpl-minimal-light .r-entry-sub { color: var(--muted); font-weight: 500; margin-left: 2mm; }
+.tpl-minimal-light .r-entry-dates { color: var(--muted); font-size: 8.5pt; white-space: nowrap; }
+.tpl-minimal-light .r-entry-text { margin: 1.2mm 0 0; }
+
+/* Навыки-чипы: чем выше уровень, тем насыщеннее чип */
+.tpl-minimal-light .r-skill-list { margin: 0; padding: 0; list-style: none; }
+.tpl-minimal-light .r-skill { display: inline-block; margin: 0 1.5mm 1.8mm 0; padding: .8mm 3.2mm; border-radius: 10mm;
+  font-size: 8.5pt; font-weight: 500; background: var(--tint); color: var(--accent); }
+.tpl-minimal-light .r-skill.lvl-1, .tpl-minimal-light .r-skill.lvl-2 { background: #F5F7FB; color: var(--muted); }
+.tpl-minimal-light .r-skill.lvl-4 { background: #DCE7FF; }
+.tpl-minimal-light .r-skill.lvl-5 { background: var(--accent); color: #fff; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <header class="r-header">
+    <div class="r-ident">
+      <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+      <ul class="r-contacts">
+        {% if resume.email %}<li>{{ resume.email }}</li>{% endif %}
+        {% if resume.phone %}<li>{{ resume.phone }}</li>{% endif %}
+        {% if resume.address %}<li>{{ resume.address }}</li>{% endif %}
+      </ul>
+    </div>
+    {% if resume.photo %}<img class="r-photo" src="{{ resume.photo.url }}" alt="">{% endif %}
+  </header>
+
+  {% if resume.summary %}
+  <section class="r-section r-summary">
+    <h2>Про себе</h2>
+    <p>{{ resume.summary|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+
+  {% with exps=resume.work_experiences.all %}{% if exps %}
+  <section class="r-section">
+    <h2>Досвід роботи</h2>
+    {% for exp in exps %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <span><span class="r-entry-title">{{ exp.position }}</span><span class="r-entry-sub">{{ exp.company }}</span></span>
+        <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+      </div>
+      {% if exp.description %}<p class="r-entry-text">{{ exp.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with edus=resume.educations.all %}{% if edus %}
+  <section class="r-section">
+    <h2>Освіта</h2>
+    {% for edu in edus %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <span><span class="r-entry-title">{{ edu.institution }}</span>{% if edu.degree %}<span class="r-entry-sub">{{ edu.degree }}</span>{% endif %}</span>
+        <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+      </div>
+      {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with skills=resume.skills.all %}{% if skills %}
+  <section class="r-section">
+    <h2>Навички</h2>
+    <ul class="r-skill-list">
+      {% for skill in skills %}<li class="r-skill lvl-{{ skill.level }}">{{ skill.name }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}{% endwith %}
+
+</div>
+{% endblock %}

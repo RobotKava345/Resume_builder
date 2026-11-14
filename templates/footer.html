@@ -24,7 +24,7 @@
                 <h6 class="text-white mb-2">Навігація</h6>
                 <ul class="list-unstyled small mb-0 footer-links">
                     <li class="mb-1"><a href="{% url 'main:template_list' %}"><i class="bi bi-grid"></i> Шаблони</a></li>
-                    <li class="mb-1"><a href="{% url 'main:announcement_list' %}"><i class="bi bi-megaphone"></i> Новини</a></li>
+                    
                     {% if user.is_authenticated %}
                     <li class="mb-1"><a href="{% url 'main:resume_list' %}"><i class="bi bi-folder2-open"></i> Мої резюме</a></li>
                     {% endif %}

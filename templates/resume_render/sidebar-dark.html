@@ -1,0 +1,126 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}sidebar-dark{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* sidebar-dark · S3 Sidebar · тёмный сайдбар слева 68 мм, фото кругом, навыки полосками, справа опыт и образование.
+   Фон сайдбара — отдельный элемент .sidebar-bg: в печати он fixed (повторяется на каждой странице),
+   на экране absolute. Вертикальные поля страницы задаются через @page, горизонтальные — padding. */
+@page { size: A4; margin: 14mm 0; }
+@media screen { .tpl-sidebar-dark .page { position: relative; padding: 14mm 0; } }
+
+.tpl-sidebar-dark { --side: #1E293B; --accent: #0EA5E9; --accent-soft: #38BDF8; --ink: #1e2430; --muted: #6b7280;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif; font-size: 9.5pt; line-height: 1.5; color: var(--ink); }
+.tpl-sidebar-dark .page::after { content: ""; display: block; clear: both; }
+
+.tpl-sidebar-dark .sidebar-bg { position: fixed; top: -14mm; bottom: -14mm; left: 0; width: 68mm; background: var(--side); }
+@media screen { .tpl-sidebar-dark .sidebar-bg { position: absolute; top: 0; bottom: 0; } }
+
+/* Сайдбар */
+.tpl-sidebar-dark .sidebar { float: left; width: 68mm; padding: 0 9mm; color: #E2E8F0; }
+.tpl-sidebar-dark .r-photo { display: block; width: 38mm; height: 38mm; margin: 0 auto 8mm; border-radius: 50%;
+  object-fit: cover; border: 1.5pt solid var(--accent-soft); }
+.tpl-sidebar-dark .sidebar h2 { margin: 0 0 3mm; padding-bottom: 1.5mm; font-size: 7.5pt; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .18em; color: var(--accent-soft); border-bottom: .5pt solid rgba(226, 232, 240, .25); }
+.tpl-sidebar-dark .side-block { margin-bottom: 8mm; }
+.tpl-sidebar-dark .c-item { margin-bottom: 2.5mm; }
+.tpl-sidebar-dark .c-label { display: block; font-size: 7pt; text-transform: uppercase; letter-spacing: .1em; color: #94A3B8; }
+.tpl-sidebar-dark .c-value { display: block; font-size: 9pt; overflow-wrap: anywhere; }
+.tpl-sidebar-dark .r-skill { margin-bottom: 3mm; break-inside: avoid; }
+.tpl-sidebar-dark .r-skill-name { display: block; font-size: 9pt; margin-bottom: 1mm; }
+.tpl-sidebar-dark .bar { height: 1.6mm; border-radius: 1mm; background: rgba(226, 232, 240, .18); }
+.tpl-sidebar-dark .bar-fill { height: 100%; border-radius: 1mm; background: var(--accent-soft); }
+
+/* Основная колонка */
+.tpl-sidebar-dark .main { margin-left: 68mm; padding: 0 14mm 0 12mm; }
+.tpl-sidebar-dark .r-name { margin: 0 0 6mm; padding-bottom: 4mm; font-size: 25pt; font-weight: 600; letter-spacing: -.01em;
+  line-height: 1.1; color: #0F172A; position: relative; }
+.tpl-sidebar-dark .r-name::after { content: ""; position: absolute; left: 0; bottom: 0; width: 16mm; height: 1.2mm; background: var(--accent); }
+.tpl-sidebar-dark .r-section { margin-bottom: 7mm; }
+.tpl-sidebar-dark .main h2 { margin: 0 0 3.5mm; padding-left: 3mm; border-left: 2pt solid var(--accent); font-size: 8.5pt;
+  font-weight: 600; text-transform: uppercase; letter-spacing: .14em; color: var(--side); }
+.tpl-sidebar-dark .r-summary p { margin: 0; }
+.tpl-sidebar-dark .r-entry { margin-bottom: 4.5mm; page-break-inside: avoid; }
+.tpl-sidebar-dark .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-sidebar-dark .r-entry-title { font-weight: 600; font-size: 10pt; }
+.tpl-sidebar-dark .r-entry-sub { display: block; color: var(--muted); font-weight: 500; font-size: 9pt; }
+.tpl-sidebar-dark .r-entry-dates { color: var(--muted); font-size: 8.5pt; white-space: nowrap; margin-left: 4mm; }
+.tpl-sidebar-dark .r-entry-text { margin: 1.2mm 0 0; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="sidebar-bg"></div>
+
+  <aside class="sidebar">
+    {% if resume.photo %}<img class="r-photo" src="{{ resume.photo.url }}" alt="">{% endif %}
+
+    {% if resume.email or resume.phone or resume.address %}
+    <div class="side-block">
+      <h2>Контакти</h2>
+      {% if resume.email %}<div class="c-item"><span class="c-label">Email</span><span class="c-value">{{ resume.email }}</span></div>{% endif %}
+      {% if resume.phone %}<div class="c-item"><span class="c-label">Телефон</span><span class="c-value">{{ resume.phone }}</span></div>{% endif %}
+      {% if resume.address %}<div class="c-item"><span class="c-label">Адреса</span><span class="c-value">{{ resume.address }}</span></div>{% endif %}
+    </div>
+    {% endif %}
+
+    {% with skills=resume.skills.all %}{% if skills %}
+    <div class="side-block">
+      <h2>Навички</h2>
+      {% for skill in skills %}
+      <div class="r-skill">
+        <span class="r-skill-name">{{ skill.name }}</span>
+        <div class="bar"><div class="bar-fill" style="width: {% widthratio skill.level 5 100 %}%"></div></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}{% endwith %}
+  </aside>
+
+  <main class="main">
+    <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+
+    {% if resume.summary %}
+    <section class="r-section r-summary">
+      <h2>Про себе</h2>
+      <p>{{ resume.summary|linebreaksbr }}</p>
+    </section>
+    {% endif %}
+
+    {% with exps=resume.work_experiences.all %}{% if exps %}
+    <section class="r-section">
+      <h2>Досвід роботи</h2>
+      {% for exp in exps %}
+      <article class="r-entry">
+        <div class="r-entry-head">
+          <div><span class="r-entry-title">{{ exp.position }}</span><span class="r-entry-sub">{{ exp.company }}</span></div>
+          <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+        </div>
+        {% if exp.description %}<p class="r-entry-text">{{ exp.description|linebreaksbr }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}{% endwith %}
+
+    {% with edus=resume.educations.all %}{% if edus %}
+    <section class="r-section">
+      <h2>Освіта</h2>
+      {% for edu in edus %}
+      <article class="r-entry">
+        <div class="r-entry-head">
+          <div><span class="r-entry-title">{{ edu.institution }}</span>{% if edu.degree %}<span class="r-entry-sub">{{ edu.degree }}</span>{% endif %}</div>
+          <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+        </div>
+        {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}{% endwith %}
+  </main>
+</div>
+{% endblock %}

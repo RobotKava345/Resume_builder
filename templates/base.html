@@ -27,6 +27,18 @@
         {% endblock %}
     </main>
 
+    <div class="modal fade" id="workspaceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="workspaceModalTitle">Редагування</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                </div>
+                <div class="modal-body" id="workspaceModalBody"></div>
+            </div>
+        </div>
+    </div>
+
     {% include 'footer.html' %}
 
     <!-- JavaScript -->

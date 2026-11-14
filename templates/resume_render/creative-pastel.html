@@ -1,0 +1,116 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}creative-pastel{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* creative-pastel · S4 Creative · секции карточками на пастельных фонах, скруглённые углы, Nunito, навыки бейджами с уровнем */
+@page { size: A4; margin: 14mm; }
+@media screen { .tpl-creative-pastel .page { padding: 14mm; } }
+
+.tpl-creative-pastel { --ink: #2b2a33; --muted: #6f6c7a;
+  font-family: "Nunito", "Segoe UI", Arial, sans-serif; font-size: 9.5pt; line-height: 1.5; color: var(--ink); }
+
+/* Карточки: у каждой свой фон (--bg) и акцент (--c) */
+.tpl-creative-pastel .card { margin-bottom: 5mm; padding: 6mm 7mm; border-radius: 5mm; background: var(--bg); }
+.tpl-creative-pastel .c-peach  { --bg: #FFE9DA; --c: #D9622B; }
+.tpl-creative-pastel .c-lav    { --bg: #ECE7FF; --c: #6B4FD8; }
+.tpl-creative-pastel .c-mint   { --bg: #DFF4EA; --c: #1F8A63; }
+.tpl-creative-pastel .c-sky    { --bg: #DFEFFF; --c: #2A72C4; }
+.tpl-creative-pastel .c-butter { --bg: #FFF3CC; --c: #B27A00; }
+
+.tpl-creative-pastel .card h2 { margin: 0 0 3.5mm; font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: var(--c); }
+
+/* Шапка-карточка */
+.tpl-creative-pastel .r-header { display: flex; justify-content: space-between; align-items: center; }
+.tpl-creative-pastel .r-name { margin: 0 0 2.5mm; font-size: 25pt; font-weight: 700; line-height: 1.08; }
+.tpl-creative-pastel .r-contacts { margin: 0; padding: 0; list-style: none; color: var(--muted); }
+.tpl-creative-pastel .r-contacts li { margin-bottom: .4mm; }
+.tpl-creative-pastel .r-photo { width: 30mm; height: 30mm; margin-left: 8mm; border-radius: 50%; object-fit: cover; border: 2.5pt solid #fff; }
+
+.tpl-creative-pastel .r-summary p { margin: 0; }
+
+.tpl-creative-pastel .r-entry { margin-bottom: 4mm; page-break-inside: avoid; }
+.tpl-creative-pastel .r-entry + .r-entry { padding-top: 4mm; border-top: 1pt solid rgba(255, 255, 255, .85); }
+.tpl-creative-pastel .r-entry:last-child { margin-bottom: 0; }
+.tpl-creative-pastel .r-entry-head { display: flex; justify-content: space-between; align-items: flex-start; }
+.tpl-creative-pastel .r-entry-title { display: block; font-weight: 700; font-size: 10.5pt; }
+.tpl-creative-pastel .r-entry-sub { display: block; color: var(--c); font-weight: 600; }
+.tpl-creative-pastel .r-entry-dates { margin-left: 4mm; padding: .6mm 2.8mm; border-radius: 10mm; background: rgba(255, 255, 255, .75);
+  color: var(--muted); font-size: 8pt; font-weight: 600; white-space: nowrap; }
+.tpl-creative-pastel .r-entry-text { margin: 1.4mm 0 0; }
+
+/* Навыки: белые бейджи с рамкой акцентного цвета и уровнем N/5 */
+.tpl-creative-pastel .r-skill-list { margin: 0; padding: 0; list-style: none; }
+.tpl-creative-pastel .r-skill { display: inline-block; margin: 0 1.6mm 2mm 0; padding: .8mm 3.2mm; border-radius: 10mm; background: #fff;
+  border: .75pt solid var(--c); font-weight: 600; font-size: 8.5pt; }
+.tpl-creative-pastel .b-lvl { margin-left: 1.6mm; color: var(--c); font-weight: 700; font-size: 8pt; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <header class="card c-peach r-header">
+    <div class="r-ident">
+      <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+      <ul class="r-contacts">
+        {% if resume.email %}<li>{{ resume.email }}</li>{% endif %}
+        {% if resume.phone %}<li>{{ resume.phone }}</li>{% endif %}
+        {% if resume.address %}<li>{{ resume.address }}</li>{% endif %}
+      </ul>
+    </div>
+    {% if resume.photo %}<img class="r-photo" src="{{ resume.photo.url }}" alt="">{% endif %}
+  </header>
+
+  {% if resume.summary %}
+  <section class="card c-lav r-summary">
+    <h2>Про себе</h2>
+    <p>{{ resume.summary|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+
+  {% with exps=resume.work_experiences.all %}{% if exps %}
+  <section class="card c-mint">
+    <h2>Досвід роботи</h2>
+    {% for exp in exps %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <div><span class="r-entry-title">{{ exp.position }}</span><span class="r-entry-sub">{{ exp.company }}</span></div>
+        <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+      </div>
+      {% if exp.description %}<p class="r-entry-text">{{ exp.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with edus=resume.educations.all %}{% if edus %}
+  <section class="card c-sky">
+    <h2>Освіта</h2>
+    {% for edu in edus %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <div><span class="r-entry-title">{{ edu.institution }}</span>{% if edu.degree %}<span class="r-entry-sub">{{ edu.degree }}</span>{% endif %}</div>
+        <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+      </div>
+      {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with skills=resume.skills.all %}{% if skills %}
+  <section class="card c-butter">
+    <h2>Навички</h2>
+    <ul class="r-skill-list">
+      {% for skill in skills %}<li class="r-skill">{{ skill.name }}<span class="b-lvl">{{ skill.level }}/5</span></li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}{% endwith %}
+
+</div>
+{% endblock %}

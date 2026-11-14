@@ -1,0 +1,94 @@
+{% extends "resume_render/_base.html" %}
+{% load static %}
+
+{% block slug %}classic-serif{% endblock %}
+
+{% block head_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block style %}
+/* classic-serif · S1 Classic · 1 колонка, шапка по центру, без фото, навыки через запятую */
+@page { size: A4; margin: 18mm 20mm; }
+@media screen { .tpl-classic-serif .page { padding: 18mm 20mm; } }
+
+.tpl-classic-serif { font-family: "PT Serif", Georgia, "Times New Roman", serif; font-size: 10.5pt; line-height: 1.4; color: #111; }
+
+.tpl-classic-serif .r-header { text-align: center; margin-bottom: 8mm; }
+.tpl-classic-serif .r-name { margin: 0 0 2mm; font-size: 24pt; font-weight: 700; letter-spacing: .04em; }
+.tpl-classic-serif .r-contacts { margin: 0; padding: 0; list-style: none; color: #555; font-size: 9.5pt; }
+.tpl-classic-serif .r-contacts li { display: inline; }
+.tpl-classic-serif .r-contacts li + li::before { content: "  ·  "; }
+
+.tpl-classic-serif .r-section { margin-bottom: 6mm; }
+.tpl-classic-serif .r-section h2 { margin: 0 0 3mm; padding-bottom: 1mm; font-size: 11pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em; border-bottom: .5pt solid #111; }
+.tpl-classic-serif .r-summary p { margin: 0; text-align: justify; }
+
+.tpl-classic-serif .r-entry { margin-bottom: 4mm; page-break-inside: avoid; }
+.tpl-classic-serif .r-entry-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tpl-classic-serif .r-entry-title { font-weight: 700; }
+.tpl-classic-serif .r-entry-dates { color: #555; font-style: italic; font-size: 9.5pt; white-space: nowrap; }
+.tpl-classic-serif .r-entry-text { margin: 1mm 0 0; color: #222; }
+
+.tpl-classic-serif .r-skills p { margin: 0; }
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <header class="r-header">
+    <h1 class="r-name">{% firstof resume.full_name resume.title %}</h1>
+    <ul class="r-contacts">
+      {% if resume.email %}<li>{{ resume.email }}</li>{% endif %}
+      {% if resume.phone %}<li>{{ resume.phone }}</li>{% endif %}
+      {% if resume.address %}<li>{{ resume.address }}</li>{% endif %}
+    </ul>
+  </header>
+
+  {% if resume.summary %}
+  <section class="r-section r-summary">
+    <h2>Про себе</h2>
+    <p>{{ resume.summary|linebreaksbr }}</p>
+  </section>
+  {% endif %}
+
+  {% with exps=resume.work_experiences.all %}{% if exps %}
+  <section class="r-section">
+    <h2>Досвід роботи</h2>
+    {% for exp in exps %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <span class="r-entry-title">{{ exp.position }}, {{ exp.company }}</span>
+        <span class="r-entry-dates">{{ exp.start_date|date:"m.Y" }} — {% if exp.is_current %}тепер{% else %}{{ exp.end_date|date:"m.Y" }}{% endif %}</span>
+      </div>
+      {% if exp.description %}<p class="r-entry-text">{{ exp.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with edus=resume.educations.all %}{% if edus %}
+  <section class="r-section">
+    <h2>Освіта</h2>
+    {% for edu in edus %}
+    <article class="r-entry">
+      <div class="r-entry-head">
+        <span class="r-entry-title">{{ edu.institution }}{% if edu.degree %}, {{ edu.degree }}{% endif %}</span>
+        <span class="r-entry-dates">{{ edu.start_date|date:"m.Y" }} — {{ edu.end_date|date:"m.Y" }}</span>
+      </div>
+      {% if edu.description %}<p class="r-entry-text">{{ edu.description|linebreaksbr }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}{% endwith %}
+
+  {% with skills=resume.skills.all %}{% if skills %}
+  <section class="r-section r-skills">
+    <h2>Навички</h2>
+    <p>{% for skill in skills %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  </section>
+  {% endif %}{% endwith %}
+
+</div>
+{% endblock %}

@@ -13,11 +13,7 @@
                         <i class="bi bi-grid"></i> Шаблони
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'main:announcement_list' %}">
-                        <i class="bi bi-megaphone"></i> Новини
-                    </a>
-                </li>
+
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'main:resume_list' %}">

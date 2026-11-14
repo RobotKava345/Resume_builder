@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-label="Демонстраційне фото">
+  <rect width="240" height="320" fill="#e8edf4"/>
+  <circle cx="120" cy="112" r="52" fill="#c7d1df"/>
+  <path d="M28 320c6-77 42-119 92-119s86 42 92 119" fill="#9eafc4"/>
+</svg>
